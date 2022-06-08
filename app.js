@@ -1,18 +1,20 @@
-const express = require("express");
-require("dotenv").config();
-const app = express();
-const port = 3000;
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+const app = express();
+const port = 3001;
+
+import { router as weatherRouter } from "./controllers/weatherController.js";
+
+app.use(cors());
+app.use("/api/v1", weatherRouter);
 
 app.listen(port, () => {
   if (!process.env.API_KEY) {
     console.error("Please, add an api key to environment variable");
     throw Error("Invalid api key");
   }
-  console.log(
-    `Example app listening on port ${port} and key ${process.env.API_KEY}`
-  );
+  console.log(`Example app listening on port ${port}`);
 });
