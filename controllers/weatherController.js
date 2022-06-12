@@ -8,7 +8,8 @@ const cacheTime = 60 * 60;
 
 router.get("/weather", cache(cacheTime), async (req, res) => {
   const cityWeatherList = await fetchWeather();
-  console.log(cityWeatherList);
+  console.log("'/weather' router cityWeatherList:\n");
+  console.log(cityWeatherList[0]);
   res.send(cityWeatherList);
 });
 

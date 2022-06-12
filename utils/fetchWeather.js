@@ -1,4 +1,5 @@
 import { sendRequest } from "../middleware/middleware.js";
+import { camelize } from "./camelize.js";
 import { readCityList } from "./readCityList.js";
 
 const fetchWeatherByLocation = async (lat, lon) => {
@@ -20,6 +21,11 @@ const fetchWeatherByLocation = async (lat, lon) => {
     lat: resp.data.info.lat,
     lon: resp.data.info.lon,
     temp: resp.data.fact.temp,
+    feelsLike: resp.data.fact.feels_like,
+    pressureMm: resp.data.fact.pressure_mm,
+    humidity: resp.data.fact.humidity,
+    imgUrl: `https://yastatic.net/weather/i/icons/funky/dark/${resp.data.fact.icon}.svg`,
+    condition: camelize(resp.data.fact.condition),
   };
 
   return weatherInfo;
@@ -27,12 +33,13 @@ const fetchWeatherByLocation = async (lat, lon) => {
 
 const fetchWeather = async () => {
   const cityList = await readCityList();
-  const cityWeatherList = [];
-  for await (const cityWeather of cityList.map((city) =>
-    fetchWeatherByLocation(city.lat, city.lon)
-  )) {
-    cityWeatherList.push(cityWeather);
-  }
+  // to get weather data for each city asynchronously
+  const cityWeatherList = await Promise.all(
+    cityList.map(async (city) => {
+      const weatherInfo = await fetchWeatherByLocation(city.lat, city.lon);
+      return weatherInfo;
+    })
+  );
   return cityWeatherList;
 };
 
