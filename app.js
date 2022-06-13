@@ -9,7 +9,7 @@ const port = process.env.PORT || 3001;
 import { router as weatherRouter } from "./controllers/weatherController.js";
 
 var corsOptions = {
-  origin: "https://redesigned-umbrella.herokuapp.com/",
+  origin: "https://redesigned-umbrella.herokuapp.com",
 };
 
 app.use(cors(corsOptions));
