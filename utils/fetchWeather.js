@@ -3,7 +3,7 @@ import { camelize } from "./camelize.js";
 import { readCityList } from "./readCityList.js";
 
 const fetchWeatherByLocation = async (lat, lon) => {
-  if (!lat || !lon) {
+  if (lat === undefined || lon === undefined) {
     throw Error("fetchWeatherByLocation: wrong arguments");
   }
 
@@ -32,9 +32,11 @@ const fetchWeatherByLocation = async (lat, lon) => {
 };
 
 const fetchWeather = async () => {
-  const cityList = await readCityList();
+  const bigCityList = await readCityList("../data/big_cities.json");
+  const blrCityList = await readCityList("../data/blr_cities.json");
+  const cityList = [...bigCityList, ...blrCityList];
   // to get weather data for each city asynchronously
-  const cityWeatherList = await Promise.all(
+  let cityWeatherList = await Promise.all(
     cityList.map(async (city) => {
       const weatherInfo = await fetchWeatherByLocation(city.lat, city.lon);
       return weatherInfo;

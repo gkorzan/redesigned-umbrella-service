@@ -1,8 +1,8 @@
 import { readFile } from "fs/promises";
 
-const readCityList = async () => {
+const readCityList = async (path) => {
   const json = JSON.parse(
-    await readFile(new URL("../data/big_cities.json", import.meta.url))
+    await readFile(new URL(path, import.meta.url))
   );
   return json;
 };
