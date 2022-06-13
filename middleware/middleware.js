@@ -12,7 +12,9 @@ const sendRequest = (url, method, body) => {
     headers: { "X-Yandex-API-Key": process.env.API_KEY },
     data: body ? body : null,
   };
-  return request(options);
+  return request(options).catch((e) => {
+    console.log(e);
+  });
 };
 
 const cache = (durationInSeconds) => {
