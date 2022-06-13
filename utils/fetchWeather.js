@@ -10,7 +10,7 @@ const fetchWeatherByLocation = async (lat, lon) => {
   const URL = `https://api.weather.yandex.ru/v2/forecast?lat=${lat}&lon=${lon}`;
 
   const resp = await sendRequest(URL);
-  if (resp.status != 200) {
+  if (!resp || resp.status != 200) {
     return {};
   }
 
