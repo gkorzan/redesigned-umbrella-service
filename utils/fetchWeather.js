@@ -1,6 +1,7 @@
 import { sendRequest } from "../middleware/middleware.js";
 import { camelize } from "./camelize.js";
 import { readCityList } from "./readCityList.js";
+import { batchCityList } from "./batchCityList.js";
 
 const fetchWeatherByLocation = async (lat, lon) => {
   if (lat === undefined || lon === undefined) {
@@ -31,10 +32,7 @@ const fetchWeatherByLocation = async (lat, lon) => {
   return weatherInfo;
 };
 
-const fetchWeather = async () => {
-  const bigCityList = await readCityList("../data/big_cities.json");
-  const blrCityList = await readCityList("../data/blr_cities.json");
-  const cityList = [...bigCityList, ...blrCityList];
+const fetchWeatherByCityList = async (cityList) => {
   // to get weather data for each city asynchronously
   let cityWeatherList = await Promise.all(
     cityList.map(async (city) => {
@@ -43,6 +41,25 @@ const fetchWeather = async () => {
     })
   );
   return cityWeatherList;
+};
+
+const fetchWeather = async () => {
+  const bigCityList = await readCityList("../data/big_cities.json");
+  const blrCityList = await readCityList("../data/blr_cities.json");
+  const formCityList = await readCityList("../data/form_cities.json");
+
+  const cityList = [...bigCityList, ...blrCityList, ...formCityList];
+
+  const batchedCityList = batchCityList(cityList);
+
+  const weather = [];
+
+  for (const batch of batchedCityList) {
+    const weatherBatch = await fetchWeatherByCityList(batch);
+    weather.push(...weatherBatch);
+  }
+
+  return weather;
 };
 
 export { fetchWeather };
