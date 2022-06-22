@@ -44,8 +44,8 @@ const fetchWeatherByCityList = async (cityList) => {
 };
 
 const fetchWeather = async () => {
-  const bigCityList = await readCityList("../data/big_cities.json");
-  const blrCityList = await readCityList("../data/blr_cities.json");
+  const bigCityList = await readCityList("../data/Xbig_cities.json");
+  const blrCityList = await readCityList("../data/Xblr_cities.json");
   const formCityList = await readCityList("../data/form_cities.json");
 
   const cityList = [...bigCityList, ...blrCityList, ...formCityList];
