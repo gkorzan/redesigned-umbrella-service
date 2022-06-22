@@ -14,6 +14,9 @@ const fetchWeatherByLocation = async (lat, lon) => {
   if (!resp || resp.status != 200) {
     return {};
   }
+  if (!resp.data.geo_object.locality) {
+    return {};
+  }
 
   const weatherInfo = {
     name: resp.data.geo_object.locality.name,
@@ -59,7 +62,7 @@ const fetchWeather = async () => {
     weather.push(...weatherBatch);
   }
 
-  return weather;
+  return weather.filter((element) => Object.keys(element).length !== 0);
 };
 
 export { fetchWeather };
